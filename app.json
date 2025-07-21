@@ -12,6 +12,7 @@
       "supportsTablet": true
     },
     "android": {
+      "permissions": ["ACCESS_FINE_LOCATION"],
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -40,7 +41,7 @@
       "typedRoutes": true
     },
     "extra": {
-      "BACKEND_URL":"http://192.168.1.5:3000",
+      "BACKEND_URL":"http://192.168.137.59:3000",
       "router": {},
       "eas": {
         "projectId": "332ede4f-c9e6-41bc-ab33-820dee91ed89"

@@ -2,16 +2,15 @@ import getInfo from "@/utils/getToken";
 import handleOpenMap from "@/utils/handleOpenMap";
 import axios from "axios";
 import Constants from "expo-constants";
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import {
-    ActivityIndicator,
-    Alert,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View
+  ActivityIndicator,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View
 } from "react-native";
 
 const Details = () => {
@@ -77,7 +76,7 @@ const Details = () => {
         ))}
       </ScrollView>
 
-      <TouchableOpacity style={styles.buttonFake} onPress={()=>Alert.alert("Work","Need to Work on it")}>
+      <TouchableOpacity style={styles.buttonFake} onPress={()=>{router.push("/location/LocationManager")}}>
         <Text style={styles.buttonText}>Start Sharing Location</Text>
       </TouchableOpacity>
     </View>
