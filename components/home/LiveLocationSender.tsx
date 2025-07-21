@@ -4,13 +4,13 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Alert, Button, StyleSheet, Text, View } from 'react-native';
 import socket from '../../utils/socket';
 
-export default function LocationTrackingScreen(bus_number:any) {
+export default function LocationTrackingScreen({bus_number}:any) {
   const [text, setText] = useState("Stop Tracking");
   const watchId = useRef<Location.LocationSubscription | null>(null);
 
   const sendLocationToServer = async (lat: number, lon: number) => {
     console.log("🚀 Emitting to socket:", lat, lon);
-    console.log(bus_number);
+    console.log(bus_number.bus_number);
     socket.emit("location-update", {
       busId: bus_number.bus_number,
       coords: { latitude: lat, longitude: lon }
