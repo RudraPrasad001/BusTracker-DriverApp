@@ -2,16 +2,15 @@ import getInfo from "@/utils/getToken";
 import handleOpenMap from "@/utils/handleOpenMap";
 import axios from "axios";
 import Constants from "expo-constants";
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import {
-    ActivityIndicator,
-    Alert,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View
+  ActivityIndicator,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View
 } from "react-native";
 
 const Details = () => {
@@ -53,7 +52,7 @@ const Details = () => {
     <View style={styles.container}>
       <Text style={styles.header}>Driver Dashboard</Text>
       <Text style={styles.info}>👤 Driver: {driver?.name}</Text>
-      <Text style={styles.info}>🚌 Bus ID: {busData?.bus_id}</Text>
+      <Text style={styles.info}>🚌 Bus Number: {busData?.bus_number}</Text>
       <Text style={styles.info}>📍 Route: {busData?.route_name}</Text>
       <Text style={styles.info}>🚌 Bus Number Plate: {busData?.number_plate}</Text>
 
@@ -77,7 +76,7 @@ const Details = () => {
         ))}
       </ScrollView>
 
-      <TouchableOpacity style={styles.buttonFake} onPress={()=>Alert.alert("Work","Need to Work on it")}>
+      <TouchableOpacity style={styles.buttonFake} onPress={()=>{router.push({pathname:`/location/LocationManager`,params:{bus_number:busData?.bus_number}})}}>
         <Text style={styles.buttonText}>Start Sharing Location</Text>
       </TouchableOpacity>
     </View>
