@@ -1,16 +1,20 @@
-// screens/LocationTrackingScreen.tsx
-
 import * as Location from 'expo-location';
+import { router } from 'expo-router';
 import React, { useEffect, useRef, useState } from 'react';
 import { Alert, Button, StyleSheet, Text, View } from 'react-native';
+import socket from '../../utils/socket';
 
-export default function LocationTrackingScreen() {
-  const [text,setText] = useState("Stop Tracking");
+export default function LocationTrackingScreen(bus_number:any) {
+  const [text, setText] = useState("Stop Tracking");
   const watchId = useRef<Location.LocationSubscription | null>(null);
 
   const sendLocationToServer = async (lat: number, lon: number) => {
-    console.log("Sending to server:", lat, lon);
-    // Your API call goes here
+    console.log("🚀 Emitting to socket:", lat, lon);
+    console.log(bus_number);
+    socket.emit("location-update", {
+      busId: bus_number.bus_number,
+      coords: { latitude: lat, longitude: lon }
+    });
   };
 
   const startTracking = async () => {
@@ -20,11 +24,15 @@ export default function LocationTrackingScreen() {
       return;
     }
 
+    // Connect and join room
+    socket.connect();
+    socket.emit("start-tracking", bus_number.bus_number);
+
     watchId.current = await Location.watchPositionAsync(
       {
         accuracy: Location.Accuracy.High,
-        timeInterval: 5000,      // every 5 seconds
-        distanceInterval: 0,     // even if not moved
+        timeInterval: 5000,
+        distanceInterval: 0,
       },
       (location) => {
         const { latitude, longitude } = location.coords;
@@ -38,6 +46,7 @@ export default function LocationTrackingScreen() {
     if (watchId.current) {
       watchId.current.remove();
       watchId.current = null;
+      socket.disconnect(); // disconnect from socket
       Alert.alert("Stopped", "Location tracking stopped.");
       console.log("🛑 Location tracking stopped.");
     }
@@ -45,9 +54,8 @@ export default function LocationTrackingScreen() {
 
   useEffect(() => {
     startTracking();
-
     return () => {
-      stopTracking(); // Cleanup on screen unmount
+      stopTracking();
     };
   }, []);
 
@@ -55,7 +63,7 @@ export default function LocationTrackingScreen() {
     <View style={styles.container}>
       <Text style={styles.title}>📍 Location Tracker</Text>
       <View style={styles.buttonContainer}>
-        <Button title={text} onPress={()=>{stopTracking();setText("Stopped")}} color="red" />
+        <Button title={text} onPress={() => { stopTracking(); setText("Stopped");router.back() }} color="red" />
       </View>
     </View>
   );
