@@ -1,16 +1,15 @@
 import * as Location from 'expo-location';
-import { router } from 'expo-router';
 import React, { useEffect, useRef, useState } from 'react';
 import { Alert, Button, StyleSheet, Text, View } from 'react-native';
 import socket from '../../utils/socket';
 
-export default function LocationTrackingScreen({bus_number}:any) {
+export default function LocationTrackingScreen(bus_number:any) {
   const [text, setText] = useState("Stop Tracking");
   const watchId = useRef<Location.LocationSubscription | null>(null);
 
   const sendLocationToServer = async (lat: number, lon: number) => {
     console.log("🚀 Emitting to socket:", lat, lon);
-    console.log(bus_number.bus_number);
+    console.log(bus_number);
     socket.emit("location-update", {
       busId: bus_number.bus_number,
       coords: { latitude: lat, longitude: lon }
@@ -63,7 +62,7 @@ export default function LocationTrackingScreen({bus_number}:any) {
     <View style={styles.container}>
       <Text style={styles.title}>📍 Location Tracker</Text>
       <View style={styles.buttonContainer}>
-        <Button title={text} onPress={() => { stopTracking(); setText("Stopped");router.back() }} color="red" />
+        <Button title={text} onPress={() => { stopTracking(); setText("Stopped"); }} color="red" />
       </View>
     </View>
   );
