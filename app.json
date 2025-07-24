@@ -41,7 +41,7 @@
       "typedRoutes": true
     },
     "extra": {
-      "BACKEND_URL":"http://10.209.200.95:3000",
+      "BACKEND_URL":"http://192.168.137.155:3000",
       "router": {},
       "eas": {
         "projectId": "332ede4f-c9e6-41bc-ab33-820dee91ed89"

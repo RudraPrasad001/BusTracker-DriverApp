@@ -1,4 +1,7 @@
+import axios from 'axios';
+import Constants from 'expo-constants';
 import * as Location from 'expo-location';
+import { router } from 'expo-router';
 import React, { useEffect, useRef, useState } from 'react';
 import { Alert, Button, StyleSheet, Text, View } from 'react-native';
 import socket from '../../utils/socket';
@@ -6,6 +9,7 @@ import socket from '../../utils/socket';
 export default function LocationTrackingScreen(bus_number:any) {
   const [text, setText] = useState("Stop Tracking");
   const watchId = useRef<Location.LocationSubscription | null>(null);
+  const url = Constants.expoConfig?.extra?.BACKEND_URL;
 
   const sendLocationToServer = async (lat: number, lon: number) => {
     console.log("🚀 Emitting to socket:", lat, lon);
@@ -25,6 +29,8 @@ export default function LocationTrackingScreen(bus_number:any) {
 
     // Connect and join room
     socket.connect();
+
+    await axios.post(`${url}/driver/setonline`,{routeNumber:bus_number.bus_number.bus_number});
     socket.emit("start-tracking", bus_number.bus_number);
 
     watchId.current = await Location.watchPositionAsync(
@@ -41,13 +47,16 @@ export default function LocationTrackingScreen(bus_number:any) {
     );
   };
 
-  const stopTracking = () => {
+  const stopTracking =async () => {
     if (watchId.current) {
       watchId.current.remove();
       watchId.current = null;
       socket.disconnect(); // disconnect from socket
+
+      await axios.post(`${url}/driver/setoffline`,{routeNumber:bus_number.bus_number.bus_number});
       Alert.alert("Stopped", "Location tracking stopped.");
       console.log("🛑 Location tracking stopped.");
+      router.back();
     }
   };
 
